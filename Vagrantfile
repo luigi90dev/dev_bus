@@ -20,13 +20,7 @@ Vagrant.configure("2") do |config|
 	end
 	
 	# Aprovisionamos mediante script
-	srv1.vm.provision "shell", inline: <<-SHELL
-		# Instalar Docker según procedimientos oficiales
-		curl -fsSL https://get.docker.com -o get-docker.sh
-		sudo sh get-docker.sh
-		sudo usermod -aG docker vagrant
-
-	SHELL
+	srv1.vm.provision "shell", inline: "bash /vagrant/provision.sh"
 	end
 	
 	# srv2
@@ -46,13 +40,7 @@ Vagrant.configure("2") do |config|
 	end
 	
 	# Aprovisionamos mediante script
-	srv2.vm.provision "shell", inline: <<-SHELL
-		# Instalar Docker según procedimientos oficiales
-		curl -fsSL https://get.docker.com -o get-docker.sh
-		sudo sh get-docker.sh
-		sudo usermod -aG docker vagrant
-
-	SHELL
+	srv2.vm.provision "shell", inline: "bash /vagrant/provision2.sh"
 	end
 	
 end
