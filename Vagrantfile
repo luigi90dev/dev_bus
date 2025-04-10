@@ -1,17 +1,58 @@
-VAGRANT_NODES = 3
 Vagrant.configure("2") do |config|
-  (1..VAGRANT_NODES).each do |i|
-    config.vm.define "node#{i}" do |node|
-      node.vm.box = "bento/ubuntu-22.04"
-      node.vm.hostname = "node#{i}"
-      node.vm.network "private_network", ip: "192.168.56.#{100 + i}"
 
-      node.vm.provider "virtualbox" do |vb|
-        vb.memory = 2048
-        vb.cpus = (i == 1) ? 2 : 1
-      end
+	# Imagen común para todos los nodos
+	BOX_IMAGE = "bento/ubuntu-22.04"
 
-      node.vm.provision "shell", path: "node-setup.sh"
-    end
-  end
+	# srv1
+	config.vm.define "srv1" do |srv1|
+	srv1.vm.box = BOX_IMAGE
+	srv1.vm.hostname = "srv1"
+	srv1.vm.network "private_network", ip: "192.168.33.10"
+	srv1.vm.network "forwarded_port", guest: 80, host: 8080 # Puerto específico para BusApp
+	
+	# Se crea una carpeta compartida dentro del directorio Vagrant común a todos los nodos
+	srv1.vm.synced_folder ".", "/vagrant"
+	
+	# Especificaciones hardware de la VM mediante el hipervisor VirtualBox
+	srv1.vm.provider "virtualbox" do |vb|
+       vb.memory = "1024" # Ajusta la memoria y andamos por debajo de requisito mínimos. No quiero pensar en que solo usamos un core ...
+       vb.cpus = "1"
+	end
+	
+	# Aprovisionamos mediante script
+	srv1.vm.provision "shell", inline: <<-SHELL
+		# Instalar Docker según procedimientos oficiales
+		curl -fsSL https://get.docker.com -o get-docker.sh
+		sudo sh get-docker.sh
+		sudo usermod -aG docker vagrant
+
+	SHELL
+	end
+	
+	# srv2
+	config.vm.define "srv2" do |srv2|
+	srv2.vm.box = BOX_IMAGE
+	srv2.vm.hostname = "srv2"
+	srv2.vm.network "private_network", ip: "192.168.33.11"
+	srv2.vm.network "forwarded_port", guest: 80, host: 8088 # Puerto específico para BusApp
+	
+	# Se crea una carpeta compartida dentro del directorio Vagrant común a todos los nodos
+	srv2.vm.synced_folder ".", "/vagrant"
+	
+	# Especificaciones hardware de la VM mediante el hipervisor VirtualBox
+	srv2.vm.provider "virtualbox" do |vb|
+       vb.memory = "1024" # Ajusta la memoria y andamos por debajo de requisito mínimos. No quiero pensar en que solo usamos un core ...
+       vb.cpus = "1"
+	end
+	
+	# Aprovisionamos mediante script
+	srv2.vm.provision "shell", inline: <<-SHELL
+		# Instalar Docker según procedimientos oficiales
+		curl -fsSL https://get.docker.com -o get-docker.sh
+		sudo sh get-docker.sh
+		sudo usermod -aG docker vagrant
+
+	SHELL
+	end
+	
 end
