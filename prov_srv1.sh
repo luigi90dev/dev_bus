@@ -16,7 +16,7 @@ sudo docker compose -f /vagrant/bus-ticket-app/docker-compose.yml up --build -d
 sudo docker swarm init --advertise-addr 192.168.33.10
 
 # Obtener token de worker para unirse al Swarm
-WORKER_JOIN_TOKEN=$(sudo docker swarm join-token worker -q)
+WORKER_JOIN_TOKEN=$(sudo docker swarm join-token manager -q)
     
 # Guardar el token en un archivo para usarlo en srv2
-echo $WORKER_JOIN_TOKEN > /vagrant/worker_join_token.txt
+echo $WORKER_JOIN_TOKEN > /vagrant/token_export.txt

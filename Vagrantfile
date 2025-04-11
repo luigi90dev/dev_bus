@@ -20,7 +20,7 @@ Vagrant.configure("2") do |config|
 	end
 	
 	# Aprovisionamos mediante script
-	srv1.vm.provision "shell", inline: "bash /vagrant/provision.sh"
+	srv1.vm.provision "shell", inline: "bash /vagrant/prov_srv1.sh"
 	end
 	
 	# srv2
@@ -40,7 +40,7 @@ Vagrant.configure("2") do |config|
 	end
 	
 	# Aprovisionamos mediante script
-	srv2.vm.provision "shell", inline: "bash /vagrant/provision2.sh"
+	srv2.vm.provision "shell", inline: "bash /vagrant/prov_srv2.sh"
 	end
 	
 end
